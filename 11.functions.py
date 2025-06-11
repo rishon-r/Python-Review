@@ -1,5 +1,6 @@
 # FUNCTIONS
 
+# Functions are a core part of the Python programming language
 # The keyword def introduces a new function.
 # The def keyword must be followed by the function name and a list of formal parameters
 # The first line of the function is called the function header or the function definition
