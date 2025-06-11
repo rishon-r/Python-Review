@@ -34,7 +34,7 @@
 # A function definition associates the function name with the function object in current symbol table
 # Another name can also be used to refer to the function object
 # Then, we can access the function using the new name
-# Example:
+# Example below:
 
 def print_num(num):
     print(num)
