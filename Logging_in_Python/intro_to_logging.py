@@ -23,6 +23,7 @@ import logging
 # The filename below represents the file in which we ant our logging statements to be written
 # It will be created when this is called
 # We can also mention a format alongside basicConfig
+# These format codes can be viewed under LogRecord attributes in the logging section of thePython documentation 
 logging.basicConfig(filename='test.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
