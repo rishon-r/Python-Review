@@ -147,7 +147,7 @@ t2.start()
 # This is because when they run concurrently, any time a number is halved it is then doubled by the other thread
 # So, usually, the number just reaches a middle of range value and fluctuates slightly
 # The above would be the case if we did not use a lock
-# Locking in Python threads refers to a mechanism hat prevents multiple threads from accessing the same shared resource at the same time
+# Locking in Python threads refers to a mechanism that prevents multiple threads from accessing the same shared resource at the same time
 # The lock does not know which resource it is locking/protecting, it is the developers job to place the resource within the lock.acquire() and lock.release() block
 # Above, it is the variable x that is the shared resource being protected
 # When one thread has the lock, the other cannot access x
@@ -156,13 +156,60 @@ t2.start()
 # The thread that acquires the lock first depends on how the OS schedules the threads — it's not guaranteed to be the one started first.
 
 
-# SEMAPHORES
 
-# What is a Semaphore
+# SEMAPHORES IN PYTHON
 
-semaphore= threading.BoundedSemaphore(value=5) # value here is maximum number of accesses allowed
+# What is a Semaphore?
+# A semaphore is a synchronization tool that controls access to a shared resource pool.
+# It does not prevent access completely (like a lock), but rather allows a fixed number of threads
+# to access the resource at the same time.
+
+# Think of it like allowing only 5 people into a room at once.
+# Others must wait outside until someone leaves and frees up a slot.
+
+# Difference from Locks:
+# - A Lock only allows one thread to access a critical section at a time (mutual exclusion).
+# - A Semaphore allows multiple threads (up to a specified maximum) to enter.
 
 
+# CREATE A SEMAPHORE OBJECT
+
+
+# Use a BoundedSemaphore which, unlike a regular Semaphore, will raise an exception if
+# `release()` is called more times than `acquire()`.
+# This helps avoid programming bugs where releases happen too many times.
+semaphore = threading.BoundedSemaphore(value=5)  # Allow up to 5 threads at a time
+
+
+# DEFINE A FUNCTION TO SIMULATE ACCESS TO SHARED RESOURCE
+
+
+def access(thread_number):
+    print(f"Thread-{thread_number} is trying to acquire access to the resource...")
+
+    # Acquire the semaphore (decrements the internal counter)
+    semaphore.acquire()
+
+    try:
+        print(f"Thread-{thread_number} has acquired access!")
+        time.sleep(5)  # Simulate some operation (e.g., database query, file write)
+    finally:
+        print(f"🔓 Thread-{thread_number} is releasing access.")
+        # Always release the semaphore (increments the internal counter)
+        semaphore.release()
+
+# CREATE AND START MULTIPLE THREADS
+
+
+# We create 5 threads. All of them will be allowed through,
+# but if we increased the count to more than 5, extra threads would have to wait.
+
+for i in range(1, 6):
+    t = threading.Thread(target=access, args=[i])
+    t.start()
+
+    # Optional: sleep between thread starts to stagger access attempts
+    time.sleep(10)  # This makes threads start sequentially instead of all at once
 
 
 
